@@ -48,7 +48,7 @@ export default function TodayView({ currentDay }: TodayViewProps) {
   const nextStop = day.stops.find((s) => !progress[s.id]);
 
   return (
-    <section className="min-h-screen px-4 pb-28 pt-24 sm:px-6">
+    <section className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
       <div className="mx-auto max-w-lg">
         <p className="text-sm uppercase tracking-[0.25em] text-sage">Live trip</p>
         <h1 className="mt-2 font-display text-3xl font-bold">
@@ -82,7 +82,7 @@ export default function TodayView({ currentDay }: TodayViewProps) {
             href={getMapsLink(nextStop)}
             target="_blank"
             rel="noreferrer"
-            className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-sandstone py-4 font-display text-sm font-semibold uppercase tracking-wider text-midnight transition-shadow hover:shadow-[0_0_30px_rgba(232,168,124,0.35)]"
+            className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-sandstone px-4 py-4 text-center font-display text-sm font-semibold uppercase tracking-wider text-midnight transition-shadow hover:shadow-[0_0_30px_rgba(232,168,124,0.35)]"
           >
             Navigate to next — {nextStop.name}
           </a>

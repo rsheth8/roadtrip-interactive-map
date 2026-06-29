@@ -98,7 +98,7 @@ export default function DayCard({
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
-        className="flex w-full cursor-pointer items-start gap-4 p-5 text-left sm:p-6"
+        className="flex w-full cursor-pointer items-start gap-3 p-4 text-left sm:gap-4 sm:p-6"
       >
         <div
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-display text-lg font-bold ${

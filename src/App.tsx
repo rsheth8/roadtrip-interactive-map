@@ -41,7 +41,7 @@ function App() {
 
   if (resolvedMode === "live" && currentDay) {
     return (
-      <div className="grain min-h-screen bg-midnight pb-20 md:pb-0">
+      <div className="grain min-h-dvh bg-midnight pb-mobile-nav md:pb-0">
         <Nav
           mode="live"
           onModeChange={(m) => setViewMode(m)}
@@ -54,7 +54,7 @@ function App() {
   }
 
   return (
-    <div className="grain min-h-screen bg-midnight pb-20 md:pb-0">
+    <div className="grain min-h-dvh bg-midnight pb-mobile-nav md:pb-0">
       <Nav
         mode="hype"
         onModeChange={(m) => setViewMode(m)}

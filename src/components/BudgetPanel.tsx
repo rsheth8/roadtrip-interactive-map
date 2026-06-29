@@ -67,30 +67,30 @@ export default function BudgetPanel() {
           {rows.map((row) => (
             <div
               key={row.label}
-              className="flex items-center justify-between rounded-xl border border-white/8 bg-dusk/60 px-5 py-4"
+              className="flex flex-col gap-2 rounded-xl border border-white/8 bg-dusk/60 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"
             >
-              <div>
+              <div className="min-w-0">
                 <p className="font-medium text-white/90">{row.label}</p>
                 <p className="text-xs text-white/40">{row.detail}</p>
               </div>
-              <span className="font-display text-lg font-semibold text-sandstone">
+              <span className="shrink-0 font-display text-lg font-semibold text-sandstone">
                 ${row.amount}
               </span>
             </div>
           ))}
 
-          <div className="flex items-center justify-between rounded-xl border border-sandstone/30 bg-sandstone/10 px-5 py-5">
-            <div>
+          <div className="flex flex-col gap-2 rounded-xl border border-sandstone/30 bg-sandstone/10 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="min-w-0">
               <p className="font-display font-semibold text-white">Total trip</p>
               <p className="text-sm text-white/50">${total} all-in (shared)</p>
             </div>
-            <span className="font-display text-2xl font-bold text-sandstone">
+            <span className="shrink-0 font-display text-2xl font-bold text-sandstone">
               ${total}
             </span>
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-sage/30 bg-sage/10 px-5 py-5">
-            <div>
+          <div className="flex flex-col gap-2 rounded-xl border border-sage/30 bg-sage/10 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="min-w-0">
               <p className="font-display font-semibold text-white">
                 Rahil, Sriram & Rishabh
               </p>
@@ -99,19 +99,19 @@ export default function BudgetPanel() {
                 {getTravelerCount(splitDay + 1)} travelers after Denver)
               </p>
             </div>
-            <span className="font-display text-3xl font-bold text-sage">
+            <span className="shrink-0 font-display text-3xl font-bold text-sage">
               <AnimatedNumber value={perPersonFull} />
             </span>
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-dusk/60 px-5 py-4">
-            <div>
+          <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-dusk/60 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="min-w-0">
               <p className="font-medium text-white/90">Nilay (Denver only)</p>
               <p className="text-sm text-white/50">
                 ≈ ${perPersonNilay} · days 1–{splitDay} ({getTravelerCount(1)} travelers)
               </p>
             </div>
-            <span className="font-display text-xl font-semibold text-white/70">
+            <span className="shrink-0 font-display text-xl font-semibold text-white/70">
               ${perPersonNilay}
             </span>
           </div>

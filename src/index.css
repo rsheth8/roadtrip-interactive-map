@@ -14,8 +14,10 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 4.5rem;
-  scroll-padding-bottom: 5rem;
+  scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
+  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @media (min-width: 768px) {
@@ -26,10 +28,34 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: var(--font-body);
   background-color: var(--color-midnight);
   color: #e8edf5;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pb-mobile-nav {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+  .pb-mobile-nav {
+    padding-bottom: 0;
+  }
 }
 
 h1,
@@ -58,6 +84,7 @@ h4 {
 
 .trip-map-shell .maplibregl-canvas-container {
   z-index: 0;
+  touch-action: pan-x pan-y;
 }
 
 .trip-map-shell .maplibregl-control-container {

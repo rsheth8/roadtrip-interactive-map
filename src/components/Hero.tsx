@@ -15,7 +15,7 @@ export default function Hero({ onExplore }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24 text-center"
+      className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-20 text-center sm:px-6 sm:py-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(232,168,124,0.15),transparent_60%)]" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-midnight to-transparent" />
@@ -33,7 +33,7 @@ export default function Hero({ onExplore }: HeroProps) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="font-display text-5xl font-extrabold leading-tight tracking-tight sm:text-7xl lg:text-8xl"
+        className="font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-7xl lg:text-8xl"
       >
         <span className="bg-gradient-to-br from-white via-sandstone-light to-sandstone bg-clip-text text-transparent">
           {trip.title}

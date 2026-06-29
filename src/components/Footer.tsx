@@ -5,7 +5,7 @@ export default function Footer() {
   const departing = trip.crew.find((m) => m.lastDay);
 
   return (
-    <footer className="border-t border-white/8 px-4 py-12 pb-24 text-center sm:px-6 md:pb-12">
+    <footer className="border-t border-white/8 px-4 py-12 pb-mobile-nav text-center sm:px-6 md:pb-12">
       <p className="font-display text-lg font-semibold text-white/80">
         {trip.title} 2026
       </p>

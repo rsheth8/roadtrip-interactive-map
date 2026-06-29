@@ -208,6 +208,7 @@ export default function TripMap({
           style={{ width: "100%", height: "100%" }}
           mapStyle={mapStyle}
           interactive={interactive}
+          cooperativeGestures
           attributionControl={false}
           onError={(e) => {
             setMapError(e.error?.message ?? "Check your MapTiler key and try again.");
@@ -275,11 +276,11 @@ export default function TripMap({
         </Map>
       </div>
 
-      <div className="pointer-events-auto absolute left-3 top-3 z-10 flex rounded-lg border border-white/10 bg-midnight/80 p-0.5 text-xs backdrop-blur-sm">
+      <div className="pointer-events-auto absolute left-2 top-2 z-10 flex rounded-lg border border-white/10 bg-midnight/80 p-0.5 text-[11px] backdrop-blur-sm sm:left-3 sm:top-3 sm:text-xs">
         <button
           type="button"
           onClick={() => setMarkerMode("day")}
-          className={`rounded-md px-2.5 py-1.5 font-medium transition-colors ${
+          className={`rounded-md px-2 py-2 font-medium transition-colors sm:px-2.5 sm:py-1.5 ${
             markerMode === "day"
               ? "bg-sandstone text-midnight"
               : "text-white/60 hover:text-white"
@@ -290,7 +291,7 @@ export default function TripMap({
         <button
           type="button"
           onClick={() => setMarkerMode("all")}
-          className={`rounded-md px-2.5 py-1.5 font-medium transition-colors ${
+          className={`rounded-md px-2 py-2 font-medium transition-colors sm:px-2.5 sm:py-1.5 ${
             markerMode === "all"
               ? "bg-sandstone text-midnight"
               : "text-white/60 hover:text-white"
@@ -300,13 +301,13 @@ export default function TripMap({
         </button>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-midnight/90 to-transparent p-4">
-        <p className="font-display text-sm font-semibold text-white">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-midnight/90 to-transparent p-3 sm:p-4">
+        <p className="font-display text-sm font-semibold text-white line-clamp-2">
           {markerMode === "all"
             ? `Full trip · ${visibleStops.length} stops`
             : `Day ${activeDay}: ${activeDayData?.title}`}
         </p>
-        <p className="text-xs text-white/50">
+        <p className="text-xs text-white/50 line-clamp-2">
           {markerMode === "all"
             ? "Orange line = driving route · hover dots for stop names"
             : `${activeDayData?.route} · ${getTravelerCount(activeDay)} travelers`}

@@ -88,7 +88,7 @@ export default function DayTimeline({ activeDay, onDayChange }: DayTimelineProps
           </p>
         </div>
 
-        <div className="mb-6 h-[min(45vh,420px)] min-h-[220px]">
+        <div className="mb-6 h-[min(40vh,380px)] min-h-[200px] sm:h-[min(45vh,420px)] sm:min-h-[220px]">
           <TripMap
             activeDay={activeDay}
             days={trip.days}

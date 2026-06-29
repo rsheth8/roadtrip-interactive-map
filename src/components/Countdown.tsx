@@ -52,13 +52,13 @@ export default function Countdown({ compact }: CountdownProps) {
   }
 
   return (
-    <div className="flex gap-3 sm:gap-4">
+    <div className="flex w-full max-w-full justify-center gap-2 sm:gap-4">
       {units.map(({ label, value }) => (
         <div
           key={label}
-          className="flex min-w-[4.5rem] flex-col items-center rounded-xl border border-white/10 bg-white/5 px-3 py-3 backdrop-blur-sm sm:min-w-[5rem] sm:px-4 sm:py-4"
+          className="flex min-w-0 flex-1 max-w-[5rem] flex-col items-center rounded-xl border border-white/10 bg-white/5 px-2 py-2.5 backdrop-blur-sm sm:max-w-none sm:min-w-[5rem] sm:px-4 sm:py-4"
         >
-          <span className="font-display text-2xl font-bold text-sandstone sm:text-3xl tabular-nums">
+          <span className="font-display text-xl font-bold text-sandstone sm:text-3xl tabular-nums">
             {pad(value)}
           </span>
           <span className="mt-1 text-xs uppercase tracking-widest text-white/50">

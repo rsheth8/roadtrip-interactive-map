@@ -93,7 +93,7 @@ export default function Checklist() {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggle(item.id)}
-                          className="mt-1 h-4 w-4 shrink-0 accent-sage"
+                          className="mt-1 h-5 w-5 shrink-0 accent-sage"
                         />
                         <span
                           className={`text-sm ${isChecked ? "text-white/40 line-through" : "text-white/80"}`}
