@@ -7,6 +7,8 @@ import {
   getTripDayCount,
   trip,
 } from "../data/itinerary";
+import GasLog from "./GasLog";
+import SplitwisePanel from "./SplitwisePanel";
 
 function AnimatedNumber({ value }: { value: number }) {
   const spring = useSpring(0, { stiffness: 60, damping: 20 });
@@ -116,6 +118,9 @@ export default function BudgetPanel() {
             </span>
           </div>
         </div>
+
+        <SplitwisePanel />
+        <GasLog />
       </div>
     </section>
   );

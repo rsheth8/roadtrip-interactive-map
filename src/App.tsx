@@ -8,11 +8,12 @@ import Checklist from "./components/Checklist";
 import TodayView from "./components/TodayView";
 import Footer from "./components/Footer";
 import MobileNav from "./components/MobileNav";
+import InstallPrompt from "./components/InstallPrompt";
 
 type ViewMode = "hype" | "live" | "auto";
 
 function App() {
-  const { currentDay, isTripActive, isPreTrip } = useTripDay();
+  const { currentDay, isTripActive } = useTripDay();
   const [viewMode, setViewMode] = useState<ViewMode>("auto");
   const [activeDay, setActiveDay] = useState(1);
 
@@ -37,9 +38,10 @@ function App() {
     document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const showLiveToggle = isTripActive || !isPreTrip;
+  const showLiveToggle = true;
+  const liveDay = currentDay ?? 1;
 
-  if (resolvedMode === "live" && currentDay) {
+  if (resolvedMode === "live") {
     return (
       <div className="grain min-h-dvh bg-midnight pb-mobile-nav md:pb-0">
         <Nav
@@ -47,8 +49,9 @@ function App() {
           onModeChange={(m) => setViewMode(m)}
           showLiveToggle={showLiveToggle}
         />
-        <TodayView currentDay={currentDay} />
+        <TodayView currentDay={liveDay} preview={!currentDay} />
         <MobileNav mode="live" />
+        <InstallPrompt />
       </div>
     );
   }
@@ -69,6 +72,7 @@ function App() {
       <Checklist />
       <Footer />
       <MobileNav mode="hype" />
+      <InstallPrompt />
     </div>
   );
 }

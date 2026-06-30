@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { trip } from "../data/itinerary";
 import type { Day, Stop } from "../types/trip";
+import WeatherWidget from "./WeatherWidget";
+import LiveLocationPanel from "./LiveLocationPanel";
+import GasLog from "./GasLog";
 
 const PROGRESS_KEY = "roadtrip-day-progress";
 
@@ -16,6 +19,7 @@ function loadProgress(): Record<string, boolean> {
 
 type TodayViewProps = {
   currentDay: number;
+  preview?: boolean;
 };
 
 function getMapsLink(stop: Stop): string {
@@ -23,7 +27,7 @@ function getMapsLink(stop: Stop): string {
   return `https://maps.google.com/?q=${encodeURIComponent(stop.name)}`;
 }
 
-export default function TodayView({ currentDay }: TodayViewProps) {
+export default function TodayView({ currentDay, preview }: TodayViewProps) {
   const day: Day | undefined = trip.days.find((d) => d.dayNumber === currentDay);
   const [progress, setProgress] = useState<Record<string, boolean>>(loadProgress);
 
@@ -47,10 +51,24 @@ export default function TodayView({ currentDay }: TodayViewProps) {
   const completed = day.stops.filter((s) => progress[s.id]).length;
   const nextStop = day.stops.find((s) => !progress[s.id]);
 
+  const weatherStop = useMemo(() => {
+    const cityOrPark = day.stops.find(
+      (s) => s.type === "city" || s.type === "park" || s.type === "hotel",
+    );
+    return cityOrPark ?? day.stops[0];
+  }, [day.stops]);
+
   return (
-    <section className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
+    <section id="top" className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
       <div className="mx-auto max-w-lg">
-        <p className="text-sm uppercase tracking-[0.25em] text-sage">Live trip</p>
+        <p className="text-sm uppercase tracking-[0.25em] text-sage">
+          {preview ? "Live trip preview" : "Live trip"}
+        </p>
+        {preview && (
+          <p className="mt-1 text-xs text-white/35">
+            Previewing Day {currentDay} — switches automatically when the trip starts.
+          </p>
+        )}
         <h1 className="mt-2 font-display text-3xl font-bold">
           Day {day.dayNumber}
         </h1>
@@ -62,6 +80,20 @@ export default function TodayView({ currentDay }: TodayViewProps) {
             {day.highlight}
           </p>
         )}
+
+        {weatherStop && (
+          <div className="mt-4">
+            <WeatherWidget
+              lat={weatherStop.lat}
+              lng={weatherStop.lng}
+              locationName={weatherStop.name}
+            />
+          </div>
+        )}
+
+        <div className="mt-4">
+          <LiveLocationPanel />
+        </div>
 
         <div className="mt-4 flex items-center gap-3">
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
@@ -149,6 +181,10 @@ export default function TodayView({ currentDay }: TodayViewProps) {
             );
           })}
         </ul>
+
+        <div id="gas-log" className="mt-10">
+          <GasLog />
+        </div>
       </div>
     </section>
   );
