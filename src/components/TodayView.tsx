@@ -4,6 +4,9 @@ import type { Day, Stop } from "../types/trip";
 import WeatherWidget from "./WeatherWidget";
 import LiveLocationPanel from "./LiveLocationPanel";
 import GasLog from "./GasLog";
+import SplitwisePanel from "./SplitwisePanel";
+import { getRegionForDay, hospitalMapsUrl } from "../data/safety";
+import { eatsMapsUrl, getEatsForDay } from "../data/eats";
 
 const PROGRESS_KEY = "roadtrip-day-progress";
 
@@ -39,6 +42,14 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
     setProgress((prev) => ({ ...prev, [id]: !prev[id] }));
   }, []);
 
+  const weatherStop = useMemo(() => {
+    if (!day) return undefined;
+    const cityOrPark = day.stops.find(
+      (s) => s.type === "city" || s.type === "park" || s.type === "hotel",
+    );
+    return cityOrPark ?? day.stops[0];
+  }, [day]);
+
   if (!day) return null;
 
   const date = new Date(day.date + "T00:00:00");
@@ -50,13 +61,8 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
 
   const completed = day.stops.filter((s) => progress[s.id]).length;
   const nextStop = day.stops.find((s) => !progress[s.id]);
-
-  const weatherStop = useMemo(() => {
-    const cityOrPark = day.stops.find(
-      (s) => s.type === "city" || s.type === "park" || s.type === "hotel",
-    );
-    return cityOrPark ?? day.stops[0];
-  }, [day.stops]);
+  const region = getRegionForDay(day.dayNumber);
+  const eats = getEatsForDay(day.dayNumber);
 
   return (
     <section id="top" className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
@@ -182,8 +188,94 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
           })}
         </ul>
 
-        <div id="gas-log" className="mt-10">
+        {eats && (
+          <div id="today-eats" className="mt-10 scroll-mt-24">
+            <p className="text-sm font-medium text-white/90">
+              🍽 Eats around {eats.place}
+            </p>
+            <ul className="mt-3 space-y-2">
+              {eats.picks.map((pick) => (
+                <li
+                  key={pick.name}
+                  className="rounded-xl border border-white/8 bg-dusk/40 px-4 py-3"
+                >
+                  <a
+                    href={eatsMapsUrl(pick.mapsQuery)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-white/90 hover:text-sage"
+                  >
+                    {pick.name}
+                  </a>
+                  <p className="text-sm text-white/50">{pick.what}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {region && (
+          <div
+            id="today-safety"
+            className="mt-10 scroll-mt-24 rounded-2xl border border-red-400/20 bg-red-500/5 px-4 py-4"
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white/90">
+                🚨 Safety near {region.name}
+              </p>
+              <a href="tel:911" className="text-xs font-semibold text-red-300">
+                Call 911
+              </a>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {region.facilities.map((f) => (
+                <li
+                  key={f.name}
+                  className="flex items-start justify-between gap-3 text-sm"
+                >
+                  <a
+                    href={hospitalMapsUrl(f.mapsQuery)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="min-w-0 font-medium text-white/85 hover:text-sage"
+                  >
+                    {f.name}
+                    <span className="ml-2 rounded bg-white/8 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-white/50">
+                      {f.type}
+                    </span>
+                  </a>
+                  {f.phone && (
+                    <a
+                      href={`tel:${f.phone.replace(/[^0-9+]/g, "")}`}
+                      className="shrink-0 text-sage hover:underline"
+                    >
+                      {f.phone}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+            {region.hazards.length > 0 && (
+              <ul className="mt-3 space-y-1 text-xs text-white/60">
+                {region.hazards.map((h) => (
+                  <li key={h} className="flex gap-1.5">
+                    <span className="text-red-300/80" aria-hidden>
+                      ⚠
+                    </span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        <div id="gas-log" className="mt-10 scroll-mt-24">
           <GasLog />
+        </div>
+
+        <div id="splitwise" className="mt-6 scroll-mt-24">
+          <SplitwisePanel />
         </div>
       </div>
     </section>

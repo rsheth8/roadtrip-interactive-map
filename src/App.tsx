@@ -5,6 +5,10 @@ import Nav from "./components/Nav";
 import DayTimeline from "./components/DayTimeline";
 import BudgetPanel from "./components/BudgetPanel";
 import Checklist from "./components/Checklist";
+import VaultPanel from "./components/VaultPanel";
+import SafetyPanel from "./components/SafetyPanel";
+import VibesPanel from "./components/VibesPanel";
+import EatsNotesPanel from "./components/EatsNotesPanel";
 import TodayView from "./components/TodayView";
 import Footer from "./components/Footer";
 import MobileNav from "./components/MobileNav";
@@ -70,6 +74,10 @@ function App() {
 
       <BudgetPanel />
       <Checklist />
+      <VaultPanel />
+      <SafetyPanel />
+      <EatsNotesPanel />
+      <VibesPanel />
       <Footer />
       <MobileNav mode="hype" />
       <InstallPrompt />

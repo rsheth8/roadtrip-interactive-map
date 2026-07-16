@@ -4,15 +4,19 @@ type MobileNavProps = {
 
 const hypeLinks = [
   { href: "#hero", label: "Home", icon: "⌂" },
-  { href: "#timeline", label: "Route", icon: "◎" },
   { href: "#timeline-days", label: "Days", icon: "☰" },
   { href: "#budget", label: "Budget", icon: "$" },
   { href: "#checklist", label: "Prep", icon: "✓" },
+  { href: "#vault", label: "Vault", icon: "🗂" },
+  { href: "#safety", label: "Safety", icon: "🚨" },
 ];
 
 const liveLinks = [
   { href: "#top", label: "Today", icon: "◎" },
+  { href: "#today-safety", label: "Safety", icon: "🚨" },
+  { href: "#today-eats", label: "Eats", icon: "🍽" },
   { href: "#gas-log", label: "Gas", icon: "⛽" },
+  { href: "#splitwise", label: "Split", icon: "💸" },
 ];
 
 export default function MobileNav({ mode }: MobileNavProps) {

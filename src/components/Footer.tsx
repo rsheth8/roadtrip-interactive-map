@@ -17,7 +17,7 @@ export default function Footer() {
         </p>
       )}
       <p className="mt-4 text-xs text-white/25">
-        Jul 31 — Aug 11 · Minneapolis to Los Angeles
+        Jul 31 — Aug 12 · Minneapolis to Los Angeles
       </p>
     </footer>
   );

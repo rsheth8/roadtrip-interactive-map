@@ -46,3 +46,6 @@ export function getFirebaseDatabase(): Database | null {
 }
 
 export const LOCATION_PATH = "roadtrip2026/locations";
+export const BOOKINGS_PATH = "roadtrip2026/bookings";
+export const NOTES_PATH = "roadtrip2026/notes";
+export const GAS_PATH = "roadtrip2026/gas";

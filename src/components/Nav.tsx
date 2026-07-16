@@ -10,7 +10,11 @@ const links = [
   { href: "#timeline", label: "Route" },
   { href: "#timeline-days", label: "Days" },
   { href: "#budget", label: "Budget" },
-  { href: "#checklist", label: "Checklist" },
+  { href: "#checklist", label: "Prep" },
+  { href: "#vault", label: "Vault" },
+  { href: "#safety", label: "Safety" },
+  { href: "#eats", label: "Eats" },
+  { href: "#vibes", label: "Vibes" },
 ];
 
 export default function Nav({ mode, onModeChange, showLiveToggle }: NavProps) {
@@ -24,7 +28,7 @@ export default function Nav({ mode, onModeChange, showLiveToggle }: NavProps) {
           Western Roadtrip
         </a>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-5 lg:flex">
           {mode === "hype" &&
             links.map((l) => (
               <a

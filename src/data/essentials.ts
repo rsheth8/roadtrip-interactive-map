@@ -1,0 +1,165 @@
+/**
+ * Trip Vault — the stuff you scramble for on the road.
+ *
+ * `essentials` and `bookingSlots` are fixed reference data (edit them here).
+ * The editable per-booking details (confirmation #, address, check-in time,
+ * phone) are stored live in Firebase and keyed by each slot's stable `id`.
+ */
+
+export type EssentialContact = {
+  label: string;
+  value: string;
+  /** tel: number for a tap-to-call button, if applicable. */
+  tel?: string;
+  href?: string;
+  note?: string;
+};
+
+export type EssentialGroup = {
+  id: string;
+  title: string;
+  icon: string;
+  contacts: EssentialContact[];
+};
+
+export type BookingSlot = {
+  id: string;
+  /** Which trip day(s) this covers, for display. */
+  label: string;
+  kind: "lodging" | "flight" | "car" | "pass" | "tour";
+  /** Approximate/expected cost, for context. */
+  hint?: string;
+};
+
+export const essentials: EssentialGroup[] = [
+  {
+    id: "emergency",
+    title: "Emergency",
+    icon: "🚨",
+    contacts: [
+      { label: "Emergency (police / fire / medical)", value: "911", tel: "911" },
+      {
+        label: "Poison Control",
+        value: "1-800-222-1222",
+        tel: "18002221222",
+      },
+      {
+        label: "Roadside assistance",
+        value: "Add rental / AAA number",
+        note: "Fill in once the rental is booked — check the glovebox packet too.",
+      },
+      {
+        label: "Non-emergency (nationwide)",
+        value: "311",
+        note: "For non-urgent local issues in most cities.",
+      },
+    ],
+  },
+  {
+    id: "vehicle",
+    title: "Vehicle & park pass",
+    icon: "🚗",
+    contacts: [
+      {
+        label: "America the Beautiful pass",
+        value: "$80 — covers RMNP, Arches, Canyonlands, Bryce, Zion",
+        href: "https://www.nps.gov/planyourvisit/passes.htm",
+        note: "Buy before the trip or at the first park entrance. Keep in the glovebox.",
+      },
+      {
+        label: "Dead Horse Point (UT)",
+        value: "$20/vehicle — NOT covered by NPS pass",
+      },
+      {
+        label: "Valley of Fire (NV)",
+        value: "$15/vehicle — NOT covered by NPS pass",
+      },
+      {
+        label: "Insurance / policy #",
+        value: "Add auto + rental coverage details",
+        note: "Photograph your insurance card and rental agreement; store here.",
+      },
+    ],
+  },
+  {
+    id: "docs",
+    title: "Docs & logins",
+    icon: "🗂️",
+    contacts: [
+      {
+        label: "Recreation.gov (permits)",
+        value: "Angels Landing + timed entries",
+        href: "https://www.recreation.gov",
+        note: "Everyone knows the shared login? Screenshot confirmed permits offline.",
+      },
+      {
+        label: "Offline maps",
+        value: "Download UT / AZ / NV / CA in Google Maps",
+        note: "Cell service drops in the parks — do this on Wi-Fi before you go.",
+      },
+      {
+        label: "Shared photo album",
+        value: "Add a shared album link",
+        note: "Create one iCloud/Google shared album so all 4 phones dump photos in.",
+      },
+    ],
+  },
+  {
+    id: "angels-landing",
+    title: "Angels Landing lottery (Aug 6 hike)",
+    icon: "🧗",
+    contacts: [
+      {
+        label: "How you get in",
+        value: "recreation.gov day-before lottery",
+        href: "https://www.recreation.gov/permits/4675310",
+        note: "There is NO walk-up, phone line, or morning-of counter. It's an online lottery only.",
+      },
+      {
+        label: "When to apply",
+        value: "Aug 5 — window 12:01 AM–3:00 PM MT, results by ~4 PM MT",
+        note: "Apply the DAY BEFORE the hike, not the morning of. Set a phone reminder for Aug 5. Confirm exact times on recreation.gov.",
+      },
+      {
+        label: "Cost",
+        value: "$6 per application (non-refundable) + $3/person if awarded",
+      },
+      {
+        label: "How to apply",
+        value: "One application for all 3 of you; choose a time slot",
+        note: "Only one person needs to submit — don't waste $6 each on duplicate apps.",
+      },
+      {
+        label: "If you don't win",
+        value: "Scout Lookout or Observation Point (East Mesa) — no permit, still epic",
+      },
+      {
+        label: "Day of the hike",
+        value: "Screenshot the permit + bring photo ID",
+        note: "Rangers check permits at Scout Lookout before the chain section.",
+      },
+    ],
+  },
+];
+
+export const bookingSlots: BookingSlot[] = [
+  { id: "stay-rapid-city", label: "Night 1 · Hampton Inn, Lead SD", kind: "lodging", hint: "Booked ✓" },
+  { id: "stay-denver", label: "Nights 2–3 · DoubleTree, Denver–Thornton", kind: "lodging", hint: "Booked ✓" },
+  { id: "stay-moab", label: "Nights 4–5 · Slackline Moab", kind: "lodging", hint: "Booked ✓" },
+  { id: "stay-springdale", label: "Nights 6–7 · Airbnb, Kanab UT", kind: "lodging", hint: "Booked ✓" },
+  { id: "stay-vegas", label: "Nights 8–9 · Polo Towers, Vegas", kind: "lodging", hint: "Booked ✓ · points" },
+  { id: "stay-la", label: "Nights 10–12 · LA (friend's apt)", kind: "lodging", hint: "Free · 3 nights" },
+  { id: "tour-antelope", label: "Lower Antelope Canyon — Aug 7, 11:45 AM (Page AZ)", kind: "tour", hint: "Booked ✓ · 3 people" },
+  { id: "car-rental", label: "Car rental (one-way → LAX)", kind: "car", hint: "Confirm LAX drop-off" },
+  { id: "flight-nilay", label: "Nilay — flight home from DEN (Aug 3)", kind: "flight" },
+  { id: "flight-lax", label: "Rahil — LAX→ORD, Aug 12 11:59 PM (Frontier)", kind: "flight", hint: "Booked ✓" },
+  { id: "flight-lax-others", label: "Sriram & Rishabh — flights home from LAX", kind: "flight" },
+];
+
+export const bookingKindMeta: Record<BookingSlot["kind"], { icon: string; label: string }> = {
+  lodging: { icon: "🏨", label: "Stay" },
+  flight: { icon: "✈️", label: "Flight" },
+  car: { icon: "🚙", label: "Car" },
+  pass: { icon: "🎟️", label: "Pass" },
+  tour: { icon: "🎫", label: "Tour" },
+};

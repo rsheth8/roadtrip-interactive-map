@@ -17,6 +17,9 @@ dist-ssr
 # Local planning docs
 Untitled Notebook.pdf
 
+# Private booking data (confirmation #s, addresses) — seeded to Firebase, never committed
+scripts/*.private.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
