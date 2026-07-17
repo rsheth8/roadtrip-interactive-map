@@ -49,3 +49,4 @@ export const LOCATION_PATH = "roadtrip2026/locations";
 export const BOOKINGS_PATH = "roadtrip2026/bookings";
 export const NOTES_PATH = "roadtrip2026/notes";
 export const GAS_PATH = "roadtrip2026/gas";
+export const CHECKLIST_PATH = "roadtrip2026/checklist";

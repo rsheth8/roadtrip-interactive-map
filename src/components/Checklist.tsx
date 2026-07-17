@@ -1,22 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import { trip } from "../data/itinerary";
 import type { ChecklistItem } from "../types/trip";
+import { useSharedFlags } from "../hooks/useSharedFlags";
+import { CHECKLIST_PATH } from "../lib/firebase";
 
 const STORAGE_KEY = "roadtrip-checklist";
-
-function loadChecked(): Set<string> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return new Set();
-    return new Set(JSON.parse(raw) as string[]);
-  } catch {
-    return new Set();
-  }
-}
-
-function saveChecked(checked: Set<string>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...checked]));
-}
 
 const categoryLabels: Record<ChecklistItem["category"], string> = {
   permits: "Permits & reservations",
@@ -25,20 +12,10 @@ const categoryLabels: Record<ChecklistItem["category"], string> = {
 };
 
 export default function Checklist() {
-  const [checked, setChecked] = useState<Set<string>>(loadChecked);
-
-  useEffect(() => {
-    saveChecked(checked);
-  }, [checked]);
-
-  const toggle = useCallback((id: string) => {
-    setChecked((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
+  const { flags: checked, toggle, shared } = useSharedFlags(
+    CHECKLIST_PATH,
+    STORAGE_KEY,
+  );
 
   const categories = (["permits", "bookings", "packing"] as const).map(
     (cat) => ({
@@ -59,7 +36,8 @@ export default function Checklist() {
             Checklist
           </h2>
           <p className="mt-2 text-white/50">
-            {done}/{total} complete — saved in your browser
+            {done}/{total} complete —{" "}
+            {shared ? "synced live across the crew" : "saved on this device"}
           </p>
           <div className="mx-auto mt-4 h-1.5 max-w-xs overflow-hidden rounded-full bg-white/10">
             <div
