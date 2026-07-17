@@ -14,6 +14,7 @@ const links = [
   { href: "#vault", label: "Vault" },
   { href: "#safety", label: "Safety" },
   { href: "#eats", label: "Eats" },
+  { href: "#photos", label: "Photos" },
   { href: "#vibes", label: "Vibes" },
 ];
 

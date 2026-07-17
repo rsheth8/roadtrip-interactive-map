@@ -9,6 +9,7 @@ import VaultPanel from "./components/VaultPanel";
 import SafetyPanel from "./components/SafetyPanel";
 import VibesPanel from "./components/VibesPanel";
 import EatsNotesPanel from "./components/EatsNotesPanel";
+import PhotoSpotsPanel from "./components/PhotoSpotsPanel";
 import TodayView from "./components/TodayView";
 import Footer from "./components/Footer";
 import MobileNav from "./components/MobileNav";
@@ -77,6 +78,7 @@ function App() {
       <VaultPanel />
       <SafetyPanel />
       <EatsNotesPanel />
+      <PhotoSpotsPanel />
       <VibesPanel />
       <Footer />
       <MobileNav mode="hype" />

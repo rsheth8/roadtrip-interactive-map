@@ -7,6 +7,7 @@ import GasLog from "./GasLog";
 import SplitwisePanel from "./SplitwisePanel";
 import { getRegionForDay, hospitalMapsUrl } from "../data/safety";
 import { eatsMapsUrl, getEatsForDay } from "../data/eats";
+import { isPhotoStop } from "../data/photospots";
 
 const PROGRESS_KEY = "roadtrip-day-progress";
 
@@ -163,6 +164,11 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
                       >
                         {stop.name}
                       </span>
+                      {isPhotoStop(stop.id) && (
+                        <span className="rounded-full bg-sage/15 px-1.5 py-0.5 text-[10px] font-medium text-sage">
+                          📸
+                        </span>
+                      )}
                       {stop.time && (
                         <span className="text-xs text-sandstone">{stop.time}</span>
                       )}

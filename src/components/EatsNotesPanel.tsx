@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { eatsMapsUrl, eatsRegions } from "../data/eats";
+import { eatsMapsUrl, eatsRegions, topRatedUrl } from "../data/eats";
 import { useSharedCollection } from "../hooks/useSharedCollection";
 import { useCrewIdentity } from "../hooks/useCrewIdentity";
 import { NOTES_PATH } from "../lib/firebase";
@@ -9,9 +9,8 @@ const tagColors: Record<string, string> = {
   breakfast: "bg-sandstone/15 text-sandstone",
   lunch: "bg-sage/15 text-sage",
   dinner: "bg-sage/15 text-sage",
-  coffee: "bg-sandstone/15 text-sandstone",
   treat: "bg-sandstone/15 text-sandstone",
-  drinks: "bg-sage/15 text-sage",
+  "late night": "bg-sandstone/15 text-sandstone",
 };
 
 function timeAgo(ts: number): string {
@@ -122,8 +121,10 @@ export default function EatsNotesPanel() {
           Where to eat, what to remember
         </h2>
         <p className="mt-2 max-w-xl text-white/50">
-          Hand-picked food stops along the route, plus a shared board for
-          whatever the crew wants to jot down.
+          All picks are <span className="text-sage">vegetarian-friendly</span>,
+          well-reviewed, and easy on a college budget — plus a live "top-rated"
+          link per city so you're never rolling the dice. Shared notes board at
+          the bottom.
         </p>
 
         <div className="mt-8 space-y-4">
@@ -156,6 +157,9 @@ export default function EatsNotesPanel() {
                         >
                           {pick.name}
                         </a>
+                        <span className="rounded bg-white/8 px-1.5 py-0.5 text-[10px] text-white/55">
+                          {pick.cuisine} · {pick.price}
+                        </span>
                         {pick.tag && (
                           <span
                             className={`rounded px-1.5 py-0.5 text-[10px] uppercase tracking-wide ${
@@ -171,6 +175,31 @@ export default function EatsNotesPanel() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-white/8 pt-3">
+                <span className="text-[11px] uppercase tracking-wider text-white/30">
+                  Live top-rated:
+                </span>
+                <a
+                  href={topRatedUrl(region.area)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-sage/30 px-2.5 py-0.5 text-xs text-sage hover:bg-sage/10"
+                >
+                  🔎 veg near here
+                </a>
+                {region.liveCuisines.map((c) => (
+                  <a
+                    key={c}
+                    href={topRatedUrl(region.area, c)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-white/15 px-2.5 py-0.5 text-xs text-white/60 hover:border-sage/40 hover:text-sage"
+                  >
+                    {c}
+                  </a>
+                ))}
+              </div>
             </div>
           ))}
         </div>

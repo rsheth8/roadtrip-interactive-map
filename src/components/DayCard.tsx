@@ -1,4 +1,5 @@
 import type { Day, Stop } from "../types/trip";
+import { isPhotoStop } from "../data/photospots";
 
 const typeIcons: Record<Stop["type"], string> = {
   city: "🏙️",
@@ -26,6 +27,14 @@ function StopRow({ stop }: { stop: Stop }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
           <span className="font-medium text-white/90">{stop.name}</span>
+          {isPhotoStop(stop.id) && (
+            <span
+              className="rounded-full bg-sage/15 px-1.5 py-0.5 text-[10px] font-medium text-sage"
+              title="Great photo spot"
+            >
+              📸 photo
+            </span>
+          )}
           {stop.time && (
             <span className="text-xs text-sandstone">{stop.time}</span>
           )}

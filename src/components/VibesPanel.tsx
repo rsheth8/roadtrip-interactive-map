@@ -1,4 +1,10 @@
-import { driveGames, playlists, podcasts, type MediaLink } from "../data/vibes";
+import {
+  driveGames,
+  playlists,
+  podcasts,
+  vegasNights,
+  type MediaLink,
+} from "../data/vibes";
 
 function MediaRow({ item }: { item: MediaLink }) {
   return (
@@ -61,6 +67,54 @@ export default function VibesPanel() {
               >
                 <p className="font-medium text-sandstone">{g.name}</p>
                 <p className="mt-1 text-sm text-white/55">{g.how}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <h3 className="font-display text-xl font-semibold">🎰 Vegas nights</h3>
+          <p className="mt-1 text-sm text-white/45">
+            Budget-friendly ways to do the Strip (Aug 7–8). Prices are rough —
+            always check current listings.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {vegasNights.map((cat) => (
+              <div
+                key={cat.id}
+                className="rounded-2xl border border-white/8 bg-dusk/50 px-5 py-4"
+              >
+                <p className="flex items-center gap-2 font-display text-lg font-semibold">
+                  <span aria-hidden>{cat.icon}</span>
+                  {cat.title}
+                </p>
+                {cat.note && (
+                  <p className="mt-1 text-xs text-white/40">{cat.note}</p>
+                )}
+                <ul className="mt-3 space-y-3">
+                  {cat.picks.map((p) => (
+                    <li key={p.name}>
+                      {p.url ? (
+                        <a
+                          href={p.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium text-white/90 hover:text-sage"
+                        >
+                          {p.name}
+                        </a>
+                      ) : (
+                        <span className="font-medium text-white/90">
+                          {p.name}
+                        </span>
+                      )}
+                      {p.price && (
+                        <span className="ml-2 text-xs text-sage">{p.price}</span>
+                      )}
+                      <p className="mt-0.5 text-sm text-white/50">{p.detail}</p>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
