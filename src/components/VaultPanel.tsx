@@ -10,8 +10,8 @@ import { useCrewIdentity } from "../hooks/useCrewIdentity";
 import { BOOKINGS_PATH } from "../lib/firebase";
 import type { BookingDetail } from "../types/live";
 
-function isFilled(d?: BookingDetail): boolean {
-  return !!(d && (d.confirmation || d.address || d.checkIn || d.phone));
+function mapsUrl(query: string): string {
+  return `https://maps.google.com/?q=${encodeURIComponent(query)}`;
 }
 
 function BookingCard({
@@ -27,18 +27,11 @@ function BookingCard({
 }) {
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState(detail?.confirmation ?? "");
-  const [address, setAddress] = useState(detail?.address ?? "");
-  const [checkIn, setCheckIn] = useState(detail?.checkIn ?? "");
-  const [phone, setPhone] = useState(detail?.phone ?? "");
   const meta = bookingKindMeta[slot.kind];
-  const filled = isFilled(detail);
 
   const save = () => {
     onSave(slot.id, {
       confirmation: confirmation.trim() || undefined,
-      address: address.trim() || undefined,
-      checkIn: checkIn.trim() || undefined,
-      phone: phone.trim() || undefined,
       updatedBy: me,
       updatedAt: Date.now(),
     });
@@ -49,98 +42,96 @@ function BookingCard({
     <li className="rounded-xl border border-white/8 bg-dusk/40 px-4 py-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="flex items-center gap-2 font-medium text-white/90">
+          <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-white/40">
             <span aria-hidden>{meta.icon}</span>
             <span className="truncate">{slot.label}</span>
           </p>
+          {slot.place && (
+            <p className="mt-1 font-medium text-white/90">{slot.place}</p>
+          )}
           {slot.hint && (
-            <p className="text-xs text-white/35">{slot.hint}</p>
+            <p className="text-xs text-sage/80">{slot.hint}</p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className="shrink-0 text-xs text-sage hover:underline"
-        >
-          {open ? "Cancel" : filled ? "Edit" : "+ Add"}
-        </button>
+        {slot.mapsQuery && (
+          <a
+            href={mapsUrl(slot.mapsQuery)}
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 rounded-lg border border-sage/30 px-2.5 py-1 text-xs text-sage hover:bg-sage/10"
+          >
+            Maps →
+          </a>
+        )}
       </div>
 
-      {!open && filled && (
-        <dl className="mt-2 space-y-1 text-sm">
+      <dl className="mt-2 space-y-1 text-sm">
+        {slot.address && (
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-white/35">Address</dt>
+            <dd className="min-w-0 flex-1 text-white/70">{slot.address}</dd>
+          </div>
+        )}
+        {slot.when && (
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-white/35">When</dt>
+            <dd className="min-w-0 flex-1 text-white/70">{slot.when}</dd>
+          </div>
+        )}
+        {slot.phone && (
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-white/35">Phone</dt>
+            <dd>
+              <a
+                href={`tel:${slot.phone.replace(/[^0-9+]/g, "")}`}
+                className="text-sage hover:underline"
+              >
+                {slot.phone}
+              </a>
+            </dd>
+          </div>
+        )}
+        <div className="flex items-baseline gap-2">
+          <dt className="w-20 shrink-0 text-white/35">Confirm #</dt>
+          <dd className="min-w-0 flex-1">
+            {detail?.confirmation ? (
+              <span className="font-mono text-sandstone">
+                {detail.confirmation}
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                className="text-xs text-sage hover:underline"
+              >
+                {open ? "Cancel" : "+ Add"}
+              </button>
+            )}
+          </dd>
           {detail?.confirmation && (
-            <div className="flex gap-2">
-              <dt className="w-24 shrink-0 text-white/35">Confirm #</dt>
-              <dd className="font-mono text-sandstone">{detail.confirmation}</dd>
-            </div>
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              className="shrink-0 text-xs text-white/30 hover:text-sage"
+            >
+              {open ? "Cancel" : "Edit"}
+            </button>
           )}
-          {detail?.address && (
-            <div className="flex gap-2">
-              <dt className="w-24 shrink-0 text-white/35">Address</dt>
-              <dd className="min-w-0 flex-1">
-                <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(detail.address)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sage hover:underline"
-                >
-                  {detail.address}
-                </a>
-              </dd>
-            </div>
-          )}
-          {detail?.checkIn && (
-            <div className="flex gap-2">
-              <dt className="w-24 shrink-0 text-white/35">Check-in</dt>
-              <dd className="text-white/70">{detail.checkIn}</dd>
-            </div>
-          )}
-          {detail?.phone && (
-            <div className="flex gap-2">
-              <dt className="w-24 shrink-0 text-white/35">Phone</dt>
-              <dd>
-                <a href={`tel:${detail.phone.replace(/[^0-9+]/g, "")}`} className="text-sage hover:underline">
-                  {detail.phone}
-                </a>
-              </dd>
-            </div>
-          )}
-        </dl>
-      )}
+        </div>
+      </dl>
 
       {open && (
-        <div className="mt-3 space-y-2">
+        <div className="mt-2 flex gap-2">
           <input
             value={confirmation}
             onChange={(e) => setConfirmation(e.target.value)}
             placeholder="Confirmation #"
-            className="w-full rounded-lg border border-white/10 bg-midnight px-3 py-2 text-sm text-white"
+            className="min-w-0 flex-1 rounded-lg border border-white/10 bg-midnight px-3 py-2 text-sm text-white"
           />
-          <input
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Address"
-            className="w-full rounded-lg border border-white/10 bg-midnight px-3 py-2 text-sm text-white"
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-              placeholder="Check-in (e.g. 3 PM)"
-              className="w-full rounded-lg border border-white/10 bg-midnight px-3 py-2 text-sm text-white"
-            />
-            <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone"
-              inputMode="tel"
-              className="w-full rounded-lg border border-white/10 bg-midnight px-3 py-2 text-sm text-white"
-            />
-          </div>
           <button
             type="button"
             onClick={save}
-            className="w-full rounded-lg bg-sage py-2.5 text-sm font-semibold text-midnight"
+            className="shrink-0 rounded-lg bg-sage px-4 py-2 text-sm font-semibold text-midnight"
           >
             Save
           </button>
@@ -158,14 +149,13 @@ export default function VaultPanel() {
   const { me } = useCrewIdentity();
 
   const detailById = useMemo(() => {
-    // Details live in Firebase only (kept out of the public bundle for safety).
     const map: Record<string, BookingDetail> = {};
     for (const item of items) map[item.id] = item;
     return map;
   }, [items]);
 
-  const filledCount = bookingSlots.filter((s) =>
-    isFilled(detailById[s.id]),
+  const withConfirmation = bookingSlots.filter(
+    (s) => detailById[s.id]?.confirmation,
   ).length;
 
   return (
@@ -176,11 +166,8 @@ export default function VaultPanel() {
           Everything in one place
         </h2>
         <p className="mt-2 max-w-xl text-white/50">
-          The stuff you scramble for on the road — emergency numbers, the park
-          pass, and every booking confirmation.{" "}
-          {shared
-            ? "Confirmations sync live to all four phones."
-            : "Confirmations save on this device (connect Firebase to share live)."}
+          Every booking with its address, phone and a one-tap Maps link — plus
+          emergency numbers and the park pass.
         </p>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -228,12 +215,13 @@ export default function VaultPanel() {
           ))}
         </div>
 
-        <div className="mt-10 flex items-baseline justify-between">
+        <div className="mt-10 flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="font-display text-xl font-semibold">
             Bookings &amp; confirmations
           </h3>
           <span className="text-sm text-white/40">
-            {filledCount}/{bookingSlots.length} filled
+            {withConfirmation}/{bookingSlots.length} confirmation #s saved
+            {shared ? " · synced" : " · this device"}
           </span>
         </div>
         <ul className="mt-4 grid gap-3 md:grid-cols-2">

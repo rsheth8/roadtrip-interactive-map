@@ -29,6 +29,16 @@ export type BookingSlot = {
   kind: "lodging" | "flight" | "car" | "pass" | "tour";
   /** Approximate/expected cost, for context. */
   hint?: string;
+  /**
+   * Public, non-sensitive details — safe to ship in the client bundle
+   * (business names/addresses/phones are all publicly listed anyway).
+   * Confirmation numbers deliberately live in Firebase only.
+   */
+  place?: string;
+  address?: string;
+  phone?: string;
+  when?: string;
+  mapsQuery?: string;
 };
 
 export const essentials: EssentialGroup[] = [
@@ -143,17 +153,103 @@ export const essentials: EssentialGroup[] = [
 ];
 
 export const bookingSlots: BookingSlot[] = [
-  { id: "stay-rapid-city", label: "Night 1 · Hampton Inn, Lead SD", kind: "lodging", hint: "Booked ✓" },
-  { id: "stay-denver", label: "Nights 2–3 · DoubleTree, Denver–Thornton", kind: "lodging", hint: "Booked ✓" },
-  { id: "stay-moab", label: "Nights 4–5 · Slackline Moab", kind: "lodging", hint: "Booked ✓" },
-  { id: "stay-springdale", label: "Nights 6–7 · Airbnb, Kanab UT", kind: "lodging", hint: "Booked ✓" },
-  { id: "stay-vegas", label: "Nights 8–9 · Polo Towers, Vegas", kind: "lodging", hint: "Booked ✓ · points" },
-  { id: "stay-la", label: "Nights 10–12 · LA (friend's apt)", kind: "lodging", hint: "Free · 3 nights" },
-  { id: "tour-antelope", label: "Lower Antelope Canyon — Aug 7, 11:45 AM (Page AZ)", kind: "tour", hint: "Booked ✓ · 3 people" },
-  { id: "car-rental", label: "Car rental (one-way → LAX)", kind: "car", hint: "Confirm LAX drop-off" },
-  { id: "flight-nilay", label: "Nilay — flight home from DEN (Aug 3)", kind: "flight" },
-  { id: "flight-lax", label: "Rahil — LAX→ORD, Aug 12 11:59 PM (Frontier)", kind: "flight", hint: "Booked ✓" },
-  { id: "flight-lax-others", label: "Sriram & Rishabh — flights home from LAX", kind: "flight" },
+  {
+    id: "stay-rapid-city",
+    label: "Night 1 · Lead, SD",
+    kind: "lodging",
+    hint: "Booked ✓",
+    place: "Hampton Inn by Hilton Lead",
+    address: "900 Miners Ave, Lead, SD 57754",
+    phone: "+1 605-584-1800",
+    when: "Fri Jul 31, 3:00 PM → Sat Aug 1, 11:00 AM",
+    mapsQuery: "Hampton Inn by Hilton Lead 900 Miners Ave Lead SD",
+  },
+  {
+    id: "stay-denver",
+    label: "Nights 2–3 · Denver",
+    kind: "lodging",
+    hint: "Booked ✓",
+    place: "DoubleTree by Hilton Hotel Denver – Thornton",
+    address: "83 East 120th Avenue, Thornton, CO 80233",
+    phone: "+1 303-920-8000",
+    when: "Sat Aug 1, 3:00 PM → Mon Aug 3, 11:00 AM",
+    mapsQuery: "DoubleTree by Hilton Denver Thornton 83 East 120th Avenue",
+  },
+  {
+    id: "stay-moab",
+    label: "Nights 4–5 · Moab",
+    kind: "lodging",
+    hint: "Booked ✓",
+    place: "Slackline Moab, Outset Collection by Hilton",
+    address: "889 N Main St, Moab, UT 84532",
+    phone: "+1 435-259-6899",
+    when: "Mon Aug 3, 4:00 PM → Wed Aug 5, 11:00 AM",
+    mapsQuery: "Slackline Moab Outset Collection by Hilton 889 N Main St Moab UT",
+  },
+  {
+    id: "stay-springdale",
+    label: "Nights 6–7 · Kanab, UT",
+    kind: "lodging",
+    hint: "Booked ✓ · Airbnb",
+    place: "Serene Tiny Cabin #3 (Airbnb — host Daniel)",
+    address: "4800 Boulder Bluff #3 Blvd, Kanab, UT 84741",
+    when: "Wed Aug 5, after 4:00 PM → Fri Aug 7, by 10:00 AM · 3 adults",
+    mapsQuery: "4800 Boulder Bluff Kanab UT 84741",
+  },
+  {
+    id: "stay-vegas",
+    label: "Nights 8–9 · Las Vegas",
+    kind: "lodging",
+    hint: "Booked ✓ · 1050 pts",
+    place: "Polo Towers, A Hilton Vacation Club",
+    address: "3745 Las Vegas Blvd S, Las Vegas, NV 89109",
+    when: "Fri Aug 7 → Sun Aug 9",
+    mapsQuery: "Polo Towers Las Vegas 3745 Las Vegas Blvd S",
+  },
+  {
+    id: "stay-la",
+    label: "Nights 10–12 · LA (friend's apt)",
+    kind: "lodging",
+    hint: "Free · 3 nights",
+    when: "Sun Aug 9 → Wed Aug 12 · confirm the extra Aug 11 night",
+  },
+  {
+    id: "tour-antelope",
+    label: "Lower Antelope Canyon tour",
+    kind: "tour",
+    hint: "Booked ✓ · 3 people",
+    place: "Ken's Tours — Lower Antelope Canyon",
+    address: "Page, AZ (Navajo Nation)",
+    when: "Fri Aug 7, 11:45 AM — arrive 45 min early. ⏰ Navajo/Utah time, 1 hr ahead of Page AZ",
+    mapsQuery: "Ken's Tours Lower Antelope Canyon Page AZ",
+  },
+  {
+    id: "flight-lax",
+    label: "Rahil — flight home",
+    kind: "flight",
+    hint: "Booked ✓",
+    place: "Frontier F9 2446 · LAX → ORD",
+    when: "Wed Aug 12, 11:59 PM PDT → Thu Aug 13, 6:17 AM CDT (4h 18m)",
+    mapsQuery: "Los Angeles International Airport",
+  },
+  {
+    id: "car-rental",
+    label: "Car rental (one-way → LAX)",
+    kind: "car",
+    hint: "Not booked yet",
+  },
+  {
+    id: "flight-nilay",
+    label: "Nilay — flight home from DEN (Aug 3)",
+    kind: "flight",
+    hint: "Not booked yet",
+  },
+  {
+    id: "flight-lax-others",
+    label: "Sriram & Rishabh — flights home from LAX",
+    kind: "flight",
+    hint: "Not booked yet",
+  },
 ];
 
 export const bookingKindMeta: Record<BookingSlot["kind"], { icon: string; label: string }> = {
