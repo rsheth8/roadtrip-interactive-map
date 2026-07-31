@@ -5,6 +5,19 @@ import { getFirebaseDatabase, isFirebaseConfigured } from "../lib/firebase";
 export type WithId = { id: string };
 
 /**
+ * Firebase's set()/update() throw synchronously if the value contains an
+ * `undefined` property (a common shape for "this optional field is unset").
+ * Strip those keys so callers can keep writing `field: x || undefined`.
+ */
+function stripUndefined<T extends object>(value: T): T {
+  const clean = { ...value };
+  for (const key of Object.keys(clean) as (keyof T)[]) {
+    if (clean[key] === undefined) delete clean[key];
+  }
+  return clean;
+}
+
+/**
  * A realtime, crew-shared collection of records keyed by id.
  *
  * When Firebase is configured, all crew phones stay in sync live. When it is
@@ -58,7 +71,9 @@ export function useSharedCollection<T extends WithId>(
         const db = getFirebaseDatabase();
         if (db) {
           const newRef = push(ref(db, firebasePath));
-          void set(newRef, value);
+          set(newRef, stripUndefined(value)).catch((err) =>
+            console.error(`Failed to write ${firebasePath}:`, err),
+          );
           return newRef.key ?? "";
         }
       }
@@ -75,7 +90,9 @@ export function useSharedCollection<T extends WithId>(
       if (configured) {
         const db = getFirebaseDatabase();
         if (db) {
-          void set(ref(db, `${firebasePath}/${id}`), value);
+          set(ref(db, `${firebasePath}/${id}`), stripUndefined(value)).catch(
+            (err) => console.error(`Failed to write ${firebasePath}/${id}:`, err),
+          );
           return;
         }
       }
@@ -92,7 +109,9 @@ export function useSharedCollection<T extends WithId>(
       if (configured) {
         const db = getFirebaseDatabase();
         if (db) {
-          void update(ref(db, `${firebasePath}/${id}`), value);
+          update(ref(db, `${firebasePath}/${id}`), stripUndefined(value)).catch(
+            (err) => console.error(`Failed to update ${firebasePath}/${id}:`, err),
+          );
           return;
         }
       }
@@ -108,7 +127,9 @@ export function useSharedCollection<T extends WithId>(
       if (configured) {
         const db = getFirebaseDatabase();
         if (db) {
-          void remove(ref(db, `${firebasePath}/${id}`));
+          remove(ref(db, `${firebasePath}/${id}`)).catch((err) =>
+            console.error(`Failed to remove ${firebasePath}/${id}:`, err),
+          );
           return;
         }
       }
