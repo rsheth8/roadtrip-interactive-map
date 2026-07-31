@@ -1,5 +1,6 @@
 import Countdown from "./Countdown";
 import ProfileChip from "./ProfileChip";
+import GuestBanner from "./GuestBanner";
 
 type NavProps = {
   mode: "hype" | "live";
@@ -24,7 +25,7 @@ export default function Nav({ mode, onModeChange, showLiveToggle }: NavProps) {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/8 bg-midnight/80 pt-safe backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
         <a
-          href="#hero"
+          href={mode === "hype" ? "#hero" : "#top"}
           className="min-w-0 shrink font-display text-sm font-bold tracking-wide text-white sm:text-base"
         >
           Western Roadtrip
@@ -65,6 +66,7 @@ export default function Nav({ mode, onModeChange, showLiveToggle }: NavProps) {
           )}
         </div>
       </div>
+      <GuestBanner />
     </header>
   );
 }

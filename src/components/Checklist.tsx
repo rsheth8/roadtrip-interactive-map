@@ -1,6 +1,7 @@
 import { trip } from "../data/itinerary";
 import type { ChecklistItem } from "../types/trip";
 import { useSharedFlags } from "../hooks/useSharedFlags";
+import { useCrewIdentity } from "../hooks/useCrewIdentity";
 import { CHECKLIST_PATH } from "../lib/firebase";
 
 const STORAGE_KEY = "roadtrip-checklist";
@@ -16,6 +17,7 @@ export default function Checklist() {
     CHECKLIST_PATH,
     STORAGE_KEY,
   );
+  const { isGuest } = useCrewIdentity();
 
   const categories = (["permits", "bookings", "packing"] as const).map(
     (cat) => ({
@@ -37,7 +39,11 @@ export default function Checklist() {
           </h2>
           <p className="mt-2 text-white/50">
             {done}/{total} complete —{" "}
-            {shared ? "synced live across the crew" : "saved on this device"}
+            {isGuest
+              ? "the crew's live progress"
+              : shared
+                ? "synced live across the crew"
+                : "saved on this device"}
           </p>
           <div className="mx-auto mt-4 h-1.5 max-w-xs overflow-hidden rounded-full bg-white/10">
             <div
@@ -59,7 +65,9 @@ export default function Checklist() {
                   return (
                     <li key={item.id}>
                       <label
-                        className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                        className={`flex items-start gap-3 rounded-xl border px-4 py-3 transition-colors ${
+                          isGuest ? "cursor-default" : "cursor-pointer"
+                        } ${
                           isChecked
                             ? "border-sage/20 bg-sage/5"
                             : item.urgent
@@ -70,8 +78,9 @@ export default function Checklist() {
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => toggle(item.id)}
-                          className="mt-1 h-5 w-5 shrink-0 accent-sage"
+                          disabled={isGuest}
+                          onChange={() => !isGuest && toggle(item.id)}
+                          className="mt-1 h-5 w-5 shrink-0 accent-sage disabled:cursor-default disabled:opacity-60"
                         />
                         <span
                           className={`text-sm ${isChecked ? "text-white/40 line-through" : "text-white/80"}`}

@@ -6,7 +6,7 @@ import { useCrewIdentity } from "../hooks/useCrewIdentity";
 export default function GasLog() {
   const { entries, addEntry, removeEntry, totalSpent, totalGallons, mpg, shared } =
     useGasLog();
-  const { me } = useCrewIdentity();
+  const { me, isGuest } = useCrewIdentity();
   const [open, setOpen] = useState(false);
   const [cost, setCost] = useState("");
   const [gallons, setGallons] = useState("");
@@ -48,13 +48,15 @@ export default function GasLog() {
             {shared ? "· synced" : "· this device"}
           </span>
         </p>
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className="text-xs text-sage hover:underline"
-        >
-          {open ? "Cancel" : "+ Log fill-up"}
-        </button>
+        {!isGuest && (
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="text-xs text-sage hover:underline"
+          >
+            {open ? "Cancel" : "+ Log fill-up"}
+          </button>
+        )}
       </div>
 
       <div className="rounded-xl border border-white/8 bg-dusk/60 px-4 py-4">
@@ -83,7 +85,7 @@ export default function GasLog() {
         </div>
       </div>
 
-      {open && (
+      {open && !isGuest && (
         <form
           onSubmit={handleSubmit}
           className="space-y-3 rounded-xl border border-sage/20 bg-sage/5 px-4 py-4"
@@ -170,14 +172,16 @@ export default function GasLog() {
                   {entry.location ? ` · ${entry.location}` : ""}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => removeEntry(entry.id)}
-                className="text-xs text-white/30 hover:text-red-300"
-                aria-label="Remove entry"
-              >
-                ✕
-              </button>
+              {!isGuest && (
+                <button
+                  type="button"
+                  onClick={() => removeEntry(entry.id)}
+                  className="text-xs text-white/30 hover:text-red-300"
+                  aria-label="Remove entry"
+                >
+                  ✕
+                </button>
+              )}
             </li>
           ))}
         </ul>

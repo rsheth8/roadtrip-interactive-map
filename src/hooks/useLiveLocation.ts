@@ -32,14 +32,12 @@ function geoErrorMessage(err: GeolocationPositionError): string {
 }
 
 export function useLiveLocation() {
-  const { me, setMe } = useIdentity();
+  const { me } = useIdentity();
   const memberName = me ?? "";
   const [sharing, setSharingState] = useState(loadSharing);
   const [locations, setLocations] = useState<Record<string, MemberLocation>>({});
   const [geoError, setGeoError] = useState<string | null>(null);
   const [configured] = useState(isFirebaseConfigured);
-
-  const setMemberName = setMe;
 
   const setSharing = useCallback((enabled: boolean) => {
     setSharingState(enabled);
@@ -140,7 +138,6 @@ export function useLiveLocation() {
   return {
     configured,
     memberName,
-    setMemberName,
     sharing,
     setSharing,
     locations: locationList,

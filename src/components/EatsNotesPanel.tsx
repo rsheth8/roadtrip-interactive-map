@@ -28,7 +28,7 @@ function NotesBoard() {
     NOTES_PATH,
     "roadtrip-notes",
   );
-  const { me, setMe, crew } = useCrewIdentity();
+  const { me, isGuest } = useCrewIdentity();
   const [text, setText] = useState("");
 
   const notes = [...items].sort((a, b) => b.createdAt - a.createdAt);
@@ -36,50 +36,38 @@ function NotesBoard() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const value = text.trim();
-    if (!value) return;
+    if (!value || !me) return;
     add({ text: value, author: me, createdAt: Date.now() });
     setText("");
   };
 
   return (
     <div className="mt-12 rounded-2xl border border-white/8 bg-dusk/50 px-5 py-5">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="font-display text-xl font-semibold">📝 Crew notes</h3>
-        <label className="text-xs text-white/40">
-          You:{" "}
-          <select
-            value={me}
-            onChange={(e) => setMe(e.target.value)}
-            className="rounded-md border border-white/10 bg-midnight px-2 py-1 text-white"
-          >
-            {crew.map((m) => (
-              <option key={m.name} value={m.name}>
-                {m.name}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      <h3 className="font-display text-xl font-semibold">📝 Crew notes</h3>
       <p className="mt-1 text-sm text-white/45">
-        {shared
-          ? "Shared live with the whole crew — ideas, reminders, must-dos."
-          : "Saved on this device (connect Firebase to share with the crew)."}
+        {isGuest
+          ? "Notes from the crew — ideas, reminders, must-dos."
+          : shared
+            ? "Shared live with the whole crew — ideas, reminders, must-dos."
+            : "Saved on this device (connect Firebase to share with the crew)."}
       </p>
 
-      <form onSubmit={submit} className="mt-4 flex gap-2">
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Add a note or idea…"
-          className="min-w-0 flex-1 rounded-lg border border-white/10 bg-midnight px-3 py-2.5 text-sm text-white"
-        />
-        <button
-          type="submit"
-          className="shrink-0 rounded-lg bg-sage px-4 py-2.5 text-sm font-semibold text-midnight"
-        >
-          Post
-        </button>
-      </form>
+      {!isGuest && (
+        <form onSubmit={submit} className="mt-4 flex gap-2">
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Add a note or idea…"
+            className="min-w-0 flex-1 rounded-lg border border-white/10 bg-midnight px-3 py-2.5 text-sm text-white"
+          />
+          <button
+            type="submit"
+            className="shrink-0 rounded-lg bg-sage px-4 py-2.5 text-sm font-semibold text-midnight"
+          >
+            Post
+          </button>
+        </form>
+      )}
 
       {notes.length > 0 && (
         <ul className="mt-4 space-y-2">
@@ -94,14 +82,16 @@ function NotesBoard() {
                   {note.author} · {timeAgo(note.createdAt)}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => remove(note.id)}
-                className="shrink-0 text-xs text-white/30 hover:text-red-300"
-                aria-label="Delete note"
-              >
-                ✕
-              </button>
+              {!isGuest && (
+                <button
+                  type="button"
+                  onClick={() => remove(note.id)}
+                  className="shrink-0 text-xs text-white/30 hover:text-red-300"
+                  aria-label="Delete note"
+                >
+                  ✕
+                </button>
+              )}
             </li>
           ))}
         </ul>

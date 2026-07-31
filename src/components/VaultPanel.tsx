@@ -19,25 +19,26 @@ function BookingCard({
   detail,
   onSave,
   me,
+  isGuest,
 }: {
   slot: BookingSlot;
   detail?: BookingDetail;
   onSave: (id: string, value: Omit<BookingDetail, "id">) => void;
-  me: string;
+  me: string | null;
+  isGuest: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState(detail?.confirmation ?? "");
   const meta = bookingKindMeta[slot.kind];
-  const isMine = slot.owner
-    ? Array.isArray(slot.owner)
-      ? slot.owner.includes(me)
-      : slot.owner === me
-    : false;
+  const isMine =
+    !!me &&
+    !!slot.owner &&
+    (Array.isArray(slot.owner) ? slot.owner.includes(me) : slot.owner === me);
 
   const save = () => {
     onSave(slot.id, {
       confirmation: confirmation.trim() || undefined,
-      updatedBy: me,
+      updatedBy: me ?? undefined,
       updatedAt: Date.now(),
     });
     setOpen(false);
@@ -112,6 +113,8 @@ function BookingCard({
               <span className="font-mono text-sandstone">
                 {detail.confirmation}
               </span>
+            ) : isGuest ? (
+              <span className="text-xs text-white/25">Not added yet</span>
             ) : (
               <button
                 type="button"
@@ -122,7 +125,7 @@ function BookingCard({
               </button>
             )}
           </dd>
-          {detail?.confirmation && (
+          {detail?.confirmation && !isGuest && (
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
@@ -134,7 +137,7 @@ function BookingCard({
         </div>
       </dl>
 
-      {open && (
+      {open && !isGuest && (
         <div className="mt-2 flex gap-2">
           <input
             value={confirmation}
@@ -160,7 +163,7 @@ export default function VaultPanel() {
     BOOKINGS_PATH,
     "roadtrip-bookings",
   );
-  const { me } = useCrewIdentity();
+  const { me, isGuest } = useCrewIdentity();
 
   const detailById = useMemo(() => {
     const map: Record<string, BookingDetail> = {};
@@ -246,6 +249,7 @@ export default function VaultPanel() {
               detail={detailById[slot.id]}
               onSave={put}
               me={me}
+              isGuest={isGuest}
             />
           ))}
         </ul>

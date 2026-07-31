@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import Map, { Marker, NavigationControl, type MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { trip } from "../data/itinerary";
 import { useLiveLocation } from "../hooks/useLiveLocation";
+import { useCrewIdentity } from "../hooks/useCrewIdentity";
 import type { MemberLocation } from "../types/live";
 
 const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY as string | undefined;
@@ -42,15 +42,8 @@ type LiveLocationPanelProps = {
 };
 
 export default function LiveLocationPanel({ className = "" }: LiveLocationPanelProps) {
-  const {
-    configured,
-    memberName,
-    setMemberName,
-    sharing,
-    setSharing,
-    locations,
-    geoError,
-  } = useLiveLocation();
+  const { configured, sharing, setSharing, locations, geoError } = useLiveLocation();
+  const { me, isGuest } = useCrewIdentity();
 
   const mapRef = useRef<MapRef>(null);
   const [mapReady, setMapReady] = useState(false);
@@ -116,31 +109,27 @@ export default function LiveLocationPanel({ className = "" }: LiveLocationPanelP
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <select
-          value={memberName}
-          onChange={(e) => setMemberName(e.target.value)}
-          className="rounded-lg border border-white/10 bg-midnight/80 px-3 py-2 text-sm text-white/80"
-        >
-          {trip.crew.map((m) => (
-            <option key={m.name} value={m.name}>
-              I am {m.name}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          onClick={() => setSharing(!sharing)}
-          disabled={!configured}
-          className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-            sharing
-              ? "bg-sage/20 text-sage"
-              : "border border-white/10 bg-midnight/80 text-white/70 hover:text-white"
-          } disabled:cursor-not-allowed disabled:opacity-40`}
-        >
-          {sharing ? "Stop sharing" : "Share my location"}
-        </button>
-      </div>
+      {isGuest ? (
+        <p className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/45">
+          Viewing only — ask the crew to share their location to show up here.
+        </p>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-white/40">Sharing as {me}</span>
+          <button
+            type="button"
+            onClick={() => setSharing(!sharing)}
+            disabled={!configured}
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              sharing
+                ? "bg-sage/20 text-sage"
+                : "border border-white/10 bg-midnight/80 text-white/70 hover:text-white"
+            } disabled:cursor-not-allowed disabled:opacity-40`}
+          >
+            {sharing ? "Stop sharing" : "Share my location"}
+          </button>
+        </div>
+      )}
 
       {!configured && (
         <p className="rounded-lg border border-sandstone/20 bg-sandstone/5 px-3 py-2 text-xs text-white/50">

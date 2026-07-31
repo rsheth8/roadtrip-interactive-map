@@ -37,6 +37,12 @@ function AppContent() {
     }
   }, [isTripActive, currentDay]);
 
+  // Switching between Full trip <-> Today swaps to an entirely different,
+  // much shorter page — reset scroll so the new view opens at its top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [resolvedMode]);
+
   const handleDayChange = useCallback((day: number) => {
     setActiveDay(day);
   }, []);
@@ -90,8 +96,8 @@ function AppContent() {
 }
 
 function AppGate() {
-  const { me } = useIdentity();
-  return me ? <AppContent /> : <IdentityGate />;
+  const { resolved } = useIdentity();
+  return resolved ? <AppContent /> : <IdentityGate />;
 }
 
 function App() {

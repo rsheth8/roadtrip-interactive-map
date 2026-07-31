@@ -9,10 +9,13 @@ const CREW_COLORS: Record<string, string> = {
 };
 
 export default function ProfileChip() {
-  const { me, setMe, crew } = useIdentity();
+  const { me, isGuest, resolved, setMe, setGuest, crew } = useIdentity();
   const [open, setOpen] = useState(false);
 
-  if (!me) return null;
+  if (!resolved) return null;
+
+  const label = me ?? "Guest";
+  const color = me ? (CREW_COLORS[me] ?? "#e8a87c") : "#8a8f9c";
 
   return (
     <div className="relative">
@@ -20,15 +23,15 @@ export default function ProfileChip() {
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-2.5 text-xs font-medium text-white/70 hover:border-sage/30"
-        aria-label={`Signed in as ${me}, tap to switch`}
+        aria-label={`Viewing as ${label}, tap to switch`}
       >
         <span
           className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-midnight"
-          style={{ backgroundColor: CREW_COLORS[me] ?? "#e8a87c" }}
+          style={{ backgroundColor: color }}
         >
-          {me.charAt(0)}
+          {isGuest ? "👋" : label.charAt(0)}
         </span>
-        {me}
+        {label}
       </button>
 
       {open && (
@@ -62,6 +65,21 @@ export default function ProfileChip() {
                 {member.name}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setGuest();
+                setOpen(false);
+              }}
+              className={`flex w-full items-center gap-2 border-t border-white/8 px-3 py-2 text-left text-sm transition-colors hover:bg-white/5 ${
+                isGuest ? "text-sage" : "text-white/80"
+              }`}
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 text-[10px]">
+                👋
+              </span>
+              Guest
+            </button>
           </div>
         </>
       )}

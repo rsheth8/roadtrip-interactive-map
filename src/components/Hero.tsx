@@ -8,7 +8,7 @@ type HeroProps = {
 };
 
 export default function Hero({ onExplore }: HeroProps) {
-  const { me } = useCrewIdentity();
+  const { me, isGuest } = useCrewIdentity();
   const start = new Date(trip.startDate + "T00:00:00");
   const end = new Date(trip.endDate + "T00:00:00");
   const fmt = (d: Date) =>
@@ -28,7 +28,11 @@ export default function Hero({ onExplore }: HeroProps) {
         transition={{ duration: 0.6 }}
         className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-sage"
       >
-        {me ? `Hey ${me} 👋 — Summer 2026` : "Summer 2026"}
+        {me
+          ? `Hey ${me} 👋 — Summer 2026`
+          : isGuest
+            ? "👋 Following along — Summer 2026"
+            : "Summer 2026"}
       </motion.p>
 
       <motion.h1

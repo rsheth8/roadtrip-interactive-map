@@ -34,7 +34,7 @@ function getMapsLink(stop: Stop): string {
 
 export default function TodayView({ currentDay, preview }: TodayViewProps) {
   const day: Day | undefined = trip.days.find((d) => d.dayNumber === currentDay);
-  const { me } = useCrewIdentity();
+  const { me, isGuest } = useCrewIdentity();
   const [progress, setProgress] = useState<Record<string, boolean>>(loadProgress);
 
   useEffect(() => {
@@ -75,7 +75,13 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
     <section id="top" className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
       <div className="mx-auto max-w-lg">
         <p className="text-sm uppercase tracking-[0.25em] text-sage">
-          {preview ? "Live trip preview" : me ? `Hey ${me} 👋` : "Live trip"}
+          {preview
+            ? "Live trip preview"
+            : me
+              ? `Hey ${me} 👋`
+              : isGuest
+                ? "Following along 👋"
+                : "Live trip"}
         </p>
         {preview && (
           <p className="mt-1 text-xs text-white/35">
@@ -163,7 +169,9 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
             return (
               <li key={stop.id}>
                 <label
-                  className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-4 transition-colors ${
+                  className={`flex items-start gap-3 rounded-xl border px-4 py-4 transition-colors ${
+                    isGuest ? "cursor-default" : "cursor-pointer"
+                  } ${
                     done
                       ? "border-sage/20 bg-sage/5"
                       : "border-white/8 bg-dusk/40"
@@ -172,8 +180,9 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
                   <input
                     type="checkbox"
                     checked={done}
-                    onChange={() => toggleStop(stop.id)}
-                    className="mt-1 h-5 w-5 shrink-0 accent-sage"
+                    disabled={isGuest}
+                    onChange={() => !isGuest && toggleStop(stop.id)}
+                    className="mt-1 h-5 w-5 shrink-0 accent-sage disabled:cursor-default disabled:opacity-60"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">

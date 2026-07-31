@@ -9,10 +9,13 @@ const CREW_COLORS: Record<string, string> = {
 };
 
 export default function IdentityGate() {
-  const { crew, setMe } = useIdentity();
+  const { crew, setMe, setGuest, lastHint } = useIdentity();
+
+  const lastLabel =
+    lastHint?.kind === "member" ? lastHint.name : lastHint?.kind === "guest" ? "Guest" : null;
 
   return (
-    <div className="grain fixed inset-0 z-[100] flex min-h-dvh flex-col items-center justify-center bg-midnight px-4 text-center">
+    <div className="grain fixed inset-0 z-[100] flex min-h-dvh flex-col items-center justify-center overflow-y-auto bg-midnight px-4 py-12 text-center">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(232,168,124,0.15),transparent_60%)]" />
 
       <motion.p
@@ -30,7 +33,7 @@ export default function IdentityGate() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="mt-3 font-display text-3xl font-bold sm:text-4xl"
       >
-        Which one of you is this?
+        Who's this?
       </motion.h1>
       <motion.p
         initial={{ opacity: 0 }}
@@ -38,15 +41,39 @@ export default function IdentityGate() {
         transition={{ delay: 0.25 }}
         className="mt-2 max-w-sm text-sm text-white/50"
       >
-        So this device shows the right name on the checklist, notes, live map,
-        and gas log.
+        So this session shows the right name on the checklist, notes, live
+        map, and gas log. Asked fresh each time you open the app.
+      </motion.p>
+
+      {lastLabel && (
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          onClick={() =>
+            lastHint?.kind === "member" ? setMe(lastHint.name) : setGuest()
+          }
+          className="mt-8 rounded-full bg-sandstone px-6 py-3 font-display text-sm font-semibold uppercase tracking-wider text-midnight transition-shadow hover:shadow-[0_0_30px_rgba(232,168,124,0.35)]"
+        >
+          Continue as {lastLabel}
+        </motion.button>
+      )}
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+        className="mt-8 text-xs uppercase tracking-widest text-white/30"
+      >
+        {lastLabel ? "or pick someone else" : "pick one"}
       </motion.p>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.35 }}
-        className="mt-10 grid grid-cols-2 gap-3 sm:gap-4"
+        className="mt-4 grid grid-cols-2 gap-3 sm:gap-4"
       >
         {crew.map((member) => (
           <button
@@ -68,11 +95,36 @@ export default function IdentityGate() {
         ))}
       </motion.div>
 
+      <motion.button
+        type="button"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.55 }}
+        onClick={setGuest}
+        className="mt-10 flex items-center gap-2 rounded-full border border-white/10 px-5 py-2.5 text-sm text-white/60 transition-colors hover:border-white/25 hover:text-white/85"
+      >
+        <span
+          className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-bold"
+          aria-hidden
+        >
+          👋
+        </span>
+        I'm just visiting — view as a guest
+      </motion.button>
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="mt-10 text-xs text-white/25"
+        transition={{ delay: 0.65 }}
+        className="mt-2 max-w-xs text-xs text-white/30"
+      >
+        For family & friends following along — see everything, edit nothing.
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.75 }}
+        className="mt-8 text-xs text-white/25"
       >
         You can switch this anytime from the profile chip in the top bar.
       </motion.p>
