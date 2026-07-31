@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { trip } from "../data/itinerary";
+import { useCrewIdentity } from "../hooks/useCrewIdentity";
 import Countdown from "./Countdown";
 
 type HeroProps = {
@@ -7,6 +8,7 @@ type HeroProps = {
 };
 
 export default function Hero({ onExplore }: HeroProps) {
+  const { me } = useCrewIdentity();
   const start = new Date(trip.startDate + "T00:00:00");
   const end = new Date(trip.endDate + "T00:00:00");
   const fmt = (d: Date) =>
@@ -26,7 +28,7 @@ export default function Hero({ onExplore }: HeroProps) {
         transition={{ duration: 0.6 }}
         className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-sage"
       >
-        Summer 2026
+        {me ? `Hey ${me} 👋 — Summer 2026` : "Summer 2026"}
       </motion.p>
 
       <motion.h1
@@ -76,7 +78,11 @@ export default function Hero({ onExplore }: HeroProps) {
         {trip.crew.map((member) => (
           <span
             key={member.name}
-            className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-white/70"
+            className={`rounded-full border px-4 py-1.5 text-sm ${
+              member.name === me
+                ? "border-sage/40 bg-sage/10 text-sage"
+                : "border-white/10 bg-white/5 text-white/70"
+            }`}
           >
             {member.name}
             {member.lastDay && (

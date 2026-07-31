@@ -1,4 +1,5 @@
 import Countdown from "./Countdown";
+import ProfileChip from "./ProfileChip";
 
 type NavProps = {
   mode: "hype" | "live";
@@ -48,6 +49,7 @@ export default function Nav({ mode, onModeChange, showLiveToggle }: NavProps) {
               <Countdown compact />
             </span>
           )}
+          <ProfileChip />
           {showLiveToggle && (
             <button
               type="button"

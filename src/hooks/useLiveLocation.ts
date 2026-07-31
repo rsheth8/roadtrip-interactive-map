@@ -1,22 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { onValue, ref, set } from "firebase/database";
-import { trip } from "../data/itinerary";
 import { getFirebaseDatabase, isFirebaseConfigured, LOCATION_PATH } from "../lib/firebase";
+import { useIdentity } from "../context/IdentityContext";
 import type { MemberLocation } from "../types/live";
 
-const MEMBER_KEY = "roadtrip-location-member";
 const SHARING_KEY = "roadtrip-location-sharing";
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
-}
-
-function loadMember(): string {
-  try {
-    const stored = localStorage.getItem(MEMBER_KEY);
-    if (stored && trip.crew.some((m) => m.name === stored)) return stored;
-  } catch {}
-  return trip.crew[0]?.name ?? "";
 }
 
 function loadSharing(): boolean {
@@ -41,16 +32,14 @@ function geoErrorMessage(err: GeolocationPositionError): string {
 }
 
 export function useLiveLocation() {
-  const [memberName, setMemberNameState] = useState(loadMember);
+  const { me, setMe } = useIdentity();
+  const memberName = me ?? "";
   const [sharing, setSharingState] = useState(loadSharing);
   const [locations, setLocations] = useState<Record<string, MemberLocation>>({});
   const [geoError, setGeoError] = useState<string | null>(null);
   const [configured] = useState(isFirebaseConfigured);
 
-  const setMemberName = useCallback((name: string) => {
-    setMemberNameState(name);
-    localStorage.setItem(MEMBER_KEY, name);
-  }, []);
+  const setMemberName = setMe;
 
   const setSharing = useCallback((enabled: boolean) => {
     setSharingState(enabled);

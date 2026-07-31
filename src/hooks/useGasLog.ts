@@ -1,38 +1,24 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSharedCollection } from "./useSharedCollection";
+import { GAS_PATH } from "../lib/firebase";
 import type { GasEntry } from "../types/live";
 
 const GAS_LOG_KEY = "roadtrip-gas-log";
 
-function loadGasLog(): GasEntry[] {
-  try {
-    const raw = localStorage.getItem(GAS_LOG_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw) as GasEntry[];
-  } catch {
-    return [];
-  }
-}
-
 export function useGasLog() {
-  const [entries, setEntries] = useState<GasEntry[]>(loadGasLog);
+  const { items, add, remove, shared } = useSharedCollection<GasEntry>(
+    GAS_PATH,
+    GAS_LOG_KEY,
+  );
 
-  useEffect(() => {
-    localStorage.setItem(GAS_LOG_KEY, JSON.stringify(entries));
-  }, [entries]);
+  const entries = useMemo(
+    () => [...items].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)),
+    [items],
+  );
 
-  const addEntry = useCallback((entry: Omit<GasEntry, "id">) => {
-    setEntries((prev) => [
-      {
-        ...entry,
-        id: crypto.randomUUID(),
-      },
-      ...prev,
-    ]);
-  }, []);
-
-  const removeEntry = useCallback((id: string) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-  }, []);
+  const addEntry = (entry: Omit<GasEntry, "id" | "createdAt">) =>
+    add({ ...entry, createdAt: Date.now() });
+  const removeEntry = (id: string) => remove(id);
 
   const totalSpent = useMemo(
     () => entries.reduce((sum, e) => sum + e.cost, 0),
@@ -40,8 +26,7 @@ export function useGasLog() {
   );
 
   const totalGallons = useMemo(
-    () =>
-      entries.reduce((sum, e) => sum + (e.gallons ?? 0), 0) || null,
+    () => entries.reduce((sum, e) => sum + (e.gallons ?? 0), 0) || null,
     [entries],
   );
 
@@ -62,5 +47,13 @@ export function useGasLog() {
     return Math.round((miles / gallons) * 10) / 10;
   }, [entries]);
 
-  return { entries, addEntry, removeEntry, totalSpent, totalGallons, mpg };
+  return {
+    entries,
+    addEntry,
+    removeEntry,
+    totalSpent,
+    totalGallons,
+    mpg,
+    shared,
+  };
 }

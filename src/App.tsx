@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTripDay } from "./hooks/useTripDay";
+import { IdentityProvider, useIdentity } from "./context/IdentityContext";
+import IdentityGate from "./components/IdentityGate";
 import Hero from "./components/Hero";
 import Nav from "./components/Nav";
 import DayTimeline from "./components/DayTimeline";
@@ -17,7 +19,7 @@ import InstallPrompt from "./components/InstallPrompt";
 
 type ViewMode = "hype" | "live" | "auto";
 
-function App() {
+function AppContent() {
   const { currentDay, isTripActive } = useTripDay();
   const [viewMode, setViewMode] = useState<ViewMode>("auto");
   const [activeDay, setActiveDay] = useState(1);
@@ -84,6 +86,19 @@ function App() {
       <MobileNav mode="hype" />
       <InstallPrompt />
     </div>
+  );
+}
+
+function AppGate() {
+  const { me } = useIdentity();
+  return me ? <AppContent /> : <IdentityGate />;
+}
+
+function App() {
+  return (
+    <IdentityProvider>
+      <AppGate />
+    </IdentityProvider>
   );
 }
 

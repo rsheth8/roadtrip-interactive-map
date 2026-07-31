@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { trip } from "../data/itinerary";
 import { useGasLog } from "../hooks/useGasLog";
+import { useCrewIdentity } from "../hooks/useCrewIdentity";
 
 export default function GasLog() {
-  const { entries, addEntry, removeEntry, totalSpent, totalGallons, mpg } =
+  const { entries, addEntry, removeEntry, totalSpent, totalGallons, mpg, shared } =
     useGasLog();
+  const { me } = useCrewIdentity();
   const [open, setOpen] = useState(false);
   const [cost, setCost] = useState("");
   const [gallons, setGallons] = useState("");
   const [odometer, setOdometer] = useState("");
   const [location, setLocation] = useState("");
-  const [paidBy, setPaidBy] = useState(trip.crew[0]?.name ?? "");
+  const [paidBy, setPaidBy] = useState(me || trip.crew[0]?.name || "");
 
   const budgetGas = trip.budget.gas;
   const remaining = budgetGas - totalSpent;
@@ -40,7 +42,12 @@ export default function GasLog() {
   return (
     <div className="mt-6 space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-white/90">Gas log</p>
+        <p className="text-sm font-medium text-white/90">
+          Gas log{" "}
+          <span className="text-xs font-normal text-white/30">
+            {shared ? "· synced" : "· this device"}
+          </span>
+        </p>
         <button
           type="button"
           onClick={() => setOpen(!open)}

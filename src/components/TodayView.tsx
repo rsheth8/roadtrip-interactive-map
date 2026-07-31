@@ -8,6 +8,7 @@ import SplitwisePanel from "./SplitwisePanel";
 import { getRegionForDay, hospitalMapsUrl } from "../data/safety";
 import { eatsMapsUrl, getEatsForDay } from "../data/eats";
 import { isPhotoStop } from "../data/photospots";
+import { useCrewIdentity } from "../hooks/useCrewIdentity";
 
 const PROGRESS_KEY = "roadtrip-day-progress";
 
@@ -33,6 +34,7 @@ function getMapsLink(stop: Stop): string {
 
 export default function TodayView({ currentDay, preview }: TodayViewProps) {
   const day: Day | undefined = trip.days.find((d) => d.dayNumber === currentDay);
+  const { me } = useCrewIdentity();
   const [progress, setProgress] = useState<Record<string, boolean>>(loadProgress);
 
   useEffect(() => {
@@ -65,11 +67,15 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
   const region = getRegionForDay(day.dayNumber);
   const eats = getEatsForDay(day.dayNumber);
 
+  const myLastDay = trip.crew.find((c) => c.name === me)?.lastDay;
+  const isMyLastDay = myLastDay === day.dayNumber;
+  const iHaveLeft = myLastDay !== undefined && day.dayNumber > myLastDay;
+
   return (
     <section id="top" className="min-h-dvh px-4 pb-mobile-nav pt-24 sm:px-6">
       <div className="mx-auto max-w-lg">
         <p className="text-sm uppercase tracking-[0.25em] text-sage">
-          {preview ? "Live trip preview" : "Live trip"}
+          {preview ? "Live trip preview" : me ? `Hey ${me} 👋` : "Live trip"}
         </p>
         {preview && (
           <p className="mt-1 text-xs text-white/35">
@@ -79,6 +85,18 @@ export default function TodayView({ currentDay, preview }: TodayViewProps) {
         <h1 className="mt-2 font-display text-3xl font-bold">
           Day {day.dayNumber}
         </h1>
+
+        {isMyLastDay && (
+          <p className="mt-2 rounded-xl border border-sandstone/30 bg-sandstone/10 px-4 py-2.5 text-sm text-sandstone">
+            ✈️ Your last day with the crew — safe travels home, {me}!
+          </p>
+        )}
+        {iHaveLeft && (
+          <p className="mt-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/50">
+            You headed home after Day {myLastDay} — here's what the rest of the
+            crew is up to today.
+          </p>
+        )}
         <p className="text-white/50">{dateLabel}</p>
         <p className="mt-1 font-display text-lg text-sandstone">{day.title}</p>
 

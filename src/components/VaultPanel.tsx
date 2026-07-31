@@ -28,6 +28,11 @@ function BookingCard({
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState(detail?.confirmation ?? "");
   const meta = bookingKindMeta[slot.kind];
+  const isMine = slot.owner
+    ? Array.isArray(slot.owner)
+      ? slot.owner.includes(me)
+      : slot.owner === me
+    : false;
 
   const save = () => {
     onSave(slot.id, {
@@ -39,12 +44,21 @@ function BookingCard({
   };
 
   return (
-    <li className="rounded-xl border border-white/8 bg-dusk/40 px-4 py-3">
+    <li
+      className={`rounded-xl border px-4 py-3 ${
+        isMine ? "border-sage/30 bg-sage/5" : "border-white/8 bg-dusk/40"
+      }`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-white/40">
             <span aria-hidden>{meta.icon}</span>
             <span className="truncate">{slot.label}</span>
+            {isMine && (
+              <span className="rounded-full bg-sage/20 px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal text-sage">
+                👤 yours
+              </span>
+            )}
           </p>
           {slot.place && (
             <p className="mt-1 font-medium text-white/90">{slot.place}</p>

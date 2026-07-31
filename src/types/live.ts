@@ -14,6 +14,7 @@ export type GasEntry = {
   odometer?: number;
   location?: string;
   paidBy: string;
+  createdAt?: number;
 };
 
 export type SplitwiseBalance = {

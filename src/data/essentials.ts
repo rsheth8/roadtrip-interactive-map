@@ -38,6 +38,8 @@ export type BookingSlot = {
   address?: string;
   phone?: string;
   when?: string;
+  /** Crew member(s) this specifically belongs to (e.g. a personal flight). */
+  owner?: string | string[];
   mapsQuery?: string;
 };
 
@@ -231,6 +233,7 @@ export const bookingSlots: BookingSlot[] = [
     place: "Frontier F9 2446 · LAX → ORD",
     when: "Wed Aug 12, 11:59 PM PDT → Thu Aug 13, 6:17 AM CDT (4h 18m)",
     mapsQuery: "Los Angeles International Airport",
+    owner: "Rahil",
   },
   {
     id: "car-rental",
@@ -243,12 +246,14 @@ export const bookingSlots: BookingSlot[] = [
     label: "Nilay — flight home from DEN (Aug 3)",
     kind: "flight",
     hint: "Not booked yet",
+    owner: "Nilay",
   },
   {
     id: "flight-lax-others",
     label: "Sriram & Rishabh — flights home from LAX",
     kind: "flight",
     hint: "Not booked yet",
+    owner: ["Sriram", "Rishabh"],
   },
 ];
 

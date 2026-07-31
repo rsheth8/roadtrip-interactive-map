@@ -1,27 +1,11 @@
-import { useCallback, useState } from "react";
-import { trip } from "../data/itinerary";
+import { useIdentity } from "../context/IdentityContext";
 
-// Shared with useLiveLocation so "who are you?" is answered once per device.
-const MEMBER_KEY = "roadtrip-location-member";
-
-function load(): string {
-  try {
-    const stored = localStorage.getItem(MEMBER_KEY);
-    if (stored && trip.crew.some((m) => m.name === stored)) return stored;
-  } catch {}
-  return trip.crew[0]?.name ?? "";
-}
-
-/** The current device's crew member, remembered across the app. */
+/**
+ * The current device's crew member, remembered across the app.
+ * Thin wrapper over IdentityContext — falls back to the first crew member
+ * only for display purposes if somehow used before the gate resolves.
+ */
 export function useCrewIdentity() {
-  const [me, setMeState] = useState(load);
-
-  const setMe = useCallback((name: string) => {
-    setMeState(name);
-    try {
-      localStorage.setItem(MEMBER_KEY, name);
-    } catch {}
-  }, []);
-
-  return { me, setMe, crew: trip.crew };
+  const { me, setMe, crew } = useIdentity();
+  return { me: me ?? crew[0]?.name ?? "", setMe, crew };
 }
