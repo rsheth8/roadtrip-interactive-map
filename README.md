@@ -1,6 +1,15 @@
 # Western Roadtrip 2026
 
-A private, installable trip-companion web app for a specific road trip (Minneapolis → the Mountain West → Los Angeles) — an interactive map, day-by-day itinerary, budget tracker, checklist, and live crew-location sharing, all in one page.
+Private, installable trip companion for a specific drive (Minneapolis → the Mountain West → Los Angeles): interactive map, day-by-day itinerary, budget, checklist, and live crew location.
+
+| | |
+| --- | --- |
+| **Author** | [Rahil Sheth](https://github.com/rsheth8) |
+| **Live** | [roadtrip-interactive-map.vercel.app](https://roadtrip-interactive-map.vercel.app) |
+| **Stack** | React, TypeScript, MapTiler, Vite, Vercel |
+| **Status** | Personal trip companion for July 31 – August 11, 2026. Not a generic SaaS template. |
+
+## What this is
 
 ## What this is
 
