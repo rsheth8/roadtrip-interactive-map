@@ -1,18 +1,24 @@
-# Western Roadtrip 2026
-
 <p align="center">
-  <img src="docs/brand/logo.png" width="168" alt="Western Roadtrip">
+  <img src="docs/brand/logo.png" width="128" alt="Western Roadtrip 2026">
 </p>
 
+<h1 align="center">Western Roadtrip 2026</h1>
 
-Private, installable trip companion for a specific drive (Minneapolis → the Mountain West → Los Angeles): interactive map, day-by-day itinerary, budget, checklist, and live crew location.
+<p align="center">
+  Minneapolis to LA. One page for the map, the days, the money, the crew.
+</p>
 
-| | |
-| --- | --- |
-| **Author** | [Rahil Sheth](https://github.com/rsheth8) |
-| **Live** | [roadtrip-interactive-map.vercel.app](https://roadtrip-interactive-map.vercel.app) |
-| **Stack** | React, TypeScript, MapTiler, Vite, Vercel |
-| **Status** | Personal trip companion for July 31 – August 11, 2026. Not a generic SaaS template. |
+<p align="center">
+  <a href="https://roadtrip-interactive-map.vercel.app">Live</a>&nbsp;·&nbsp;<a href="https://github.com/rsheth8/roadtrip-interactive-map">Source</a>&nbsp;·&nbsp;<a href="CONTRIBUTING.md">Run locally</a>
+</p>
+
+<p align="center">
+  <img alt="React" src="https://img.shields.io/badge/React-PWA-61DAFB?style=flat-square&logo=react&logoColor=black">
+</p>
+
+<p align="center"><sub>A companion for one specific trip — not a generic planner.</sub></p>
+
+---
 
 ## What this is
 
