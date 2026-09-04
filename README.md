@@ -1,5 +1,10 @@
 # Western Roadtrip 2026
 
+<p align="center">
+  <img src="docs/brand/logo.png" width="168" alt="Western Roadtrip">
+</p>
+
+
 Private, installable trip companion for a specific drive (Minneapolis → the Mountain West → Los Angeles): interactive map, day-by-day itinerary, budget, checklist, and live crew location.
 
 | | |
@@ -190,3 +195,10 @@ Environment variables (see `.env.example`):
 - **Splitwise token never reaches the browser.** Live balances are fetched through a Vercel serverless function (`api/splitwise/balances.ts`) that holds the Splitwise API token server-side; the frontend only calls the app's own `/api/splitwise/balances` endpoint.
 - **Offline-friendly weather caching.** The PWA's Workbox config (`vite.config.ts`) adds a `NetworkFirst` runtime caching rule specifically for Open-Meteo API responses, so recent weather data remains available briefly offline.
 - **All trip content is hardcoded, not user-editable through a CMS/admin UI.** Updating the itinerary, budget, or checklist means editing the TypeScript files in `src/data/`.
+
+## Contributing
+
+PRs and issues welcome. How to run tests, env vars, and the expected layout: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Don't commit `.env`, API keys, or personal recordings.
+
